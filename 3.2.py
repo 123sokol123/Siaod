@@ -49,7 +49,18 @@ def J(x):
     ])
 
 
-# Пример использования новой функции:
-x0 = np.array([0.1, 0.1])
-solution = levenberg_marquardt(F, J, x0)
-print("Приближенное значение решения системы:", solution)
+# Список начальных приближений
+x0_list = [np.array([0.1, 0.1]), np.array([1.0, 1.0]), np.array([-1.0, -1.0])]
+
+# Пустой список для хранения найденных решений
+solutions = []
+
+# Применяем метод Левенберга-Марквардта для каждого начального приближения
+for x0 in x0_list:
+    solution = levenberg_marquardt(F, J, x0)
+    solutions.append(solution)
+
+# Выводим все найденные решения
+print("Приближенные значения решений системы:")
+for i, solution in enumerate(solutions):
+    print(f"Решение {i + 1}: {solution}")
