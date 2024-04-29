@@ -1,6 +1,7 @@
 import numpy as np
+from scipy.interpolate import CubicSpline
 
-# Функция, для которой будем строить сплайн
+# Определение функции f(x)
 def f(x):
     return np.sin(x)
 
@@ -15,21 +16,12 @@ x_values = np.arange(a, b + h, h)
 # Вычисление значений функции на сетке
 y_values = f(x_values)
 
-# Построение кубического сплайна
-def cubic_spline(x, x_values, y_values):
-    n = len(x_values) - 1
-    for i in range(n):
-        if x >= x_values[i] and x <= x_values[i+1]:
-            h = x_values[i+1] - x_values[i]
-            a = y_values[i]
-            b = (y_values[i+1] - y_values[i]) / h
-            c = (1 / h**2) * ((y_values[i+1] - y_values[i]) / h - (y_values[i] - y_values[i-1]) / (x_values[i] - x_values[i-1]))
-            d = (1 / h**3) * ((y_values[i] - y_values[i-1]) / (x_values[i] - x_values[i-1]) - (y_values[i+1] - y_values[i]) / h)
-            return a + b * (x - x_values[i]) + c * (x - x_values[i])**2 + d * (x - x_values[i])**3
+# Построение кубического сплайна с использованием CubicSpline
+cs = CubicSpline(x_values, y_values)
 
 # Значения сплайна в заданных точках
 points_to_interpolate = [1.05, 1.09, 1.13, 1.15, 1.17]
-spline_values = [cubic_spline(x, x_values, y_values) for x in points_to_interpolate]
+spline_values = cs(points_to_interpolate)
 
 # Вывод результатов
 for x, y_interp in zip(points_to_interpolate, spline_values):
